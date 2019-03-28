@@ -22,11 +22,11 @@ function draw_square(ax, x, y, area, color; angle_tick=false, angle=0.0)
     xcorners = [x - hs, x + hs, x + hs, x - hs]
     ycorners = [y - hs, y - hs, y + hs, y + hs]
 
-    ax[:fill](xcorners, ycorners, color=rgb(color))
+    ax.fill(xcorners, ycorners, color=rgb(color))
 
     if angle_tick && hs > 0.04
         len = hs * 0.8
-        ax[:add_line](plt[:Line2D]([x, x + len * cos(angle)],
+        ax.add_line(plt.Line2D([x, x + len * cos(angle)],
             [y, y + len * sin(angle)], color=brighten(color, 0.91), linewidth=0.8))
     end
 end
@@ -36,7 +36,7 @@ function colour(arg)
     idx = round(Int, (fraction % 1) * (length(cmap_kovesi_c6) - 1)) + 1
     cmap_kovesi_c6[idx]
 end
-#colour(arg) = RGB(cmocean.cm[:phase]((arg / 2π + 0.63) % 1)[1:3]...)
+#colour(arg) = RGB(cmocean.cm.phase((arg / 2π + 0.63) % 1)[1:3]...)
 
 function draw_phase_ring(x, y, radius, ax)
     mc = pyimport("matplotlib.collections")
@@ -46,12 +46,12 @@ function draw_phase_ring(x, y, radius, ax)
     steps = 256
     degree_each = 360 / steps
     for i in 1:steps
-        push!(patches, mp[:Wedge]((x, y), radius,
+        push!(patches, mp.Wedge((x, y), radius,
             (i - 1) * degree_each, i * degree_each, width=radius / 2))
     end
-    p = mc[:PatchCollection](patches)
-    p[:set_color]([rgb(colour(i / steps * 2π)) for i in 0:(steps - 1)])
-    ax[:add_collection](p)
+    p = mc.PatchCollection(patches)
+    p.set_color([rgb(colour(i / steps * 2π)) for i in 0:(steps - 1)])
+    ax.add_collection(p)
 
     padded = 1.1 * radius
     color = rgb(convert(Luv, colour(0)) |> a-> Luv(a.l, 0, 0))
@@ -81,13 +81,13 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
         ylabels = []
     end
     if length(xlabels) == 0 && length(ylabels) == 0
-        ax[:axis]("off")
+        ax.axis("off")
     end
 
-    ax[:axis]("equal")
-    ax[:set_frame_on](false)
+    ax.axis("equal")
+    ax.set_frame_on(false)
 
-    #ax[:fill]([0, width, width, 0], [0, 0, height, height], color="w")
+    #ax.fill([0, width, width, 0], [0, 0, height, height], color="w")
 
     max_magn = maximum(abs.(ρ))
     scale = 1 / (2 * max_magn)
@@ -133,17 +133,17 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
 
     ticks = collect(1.0:1.0:size(ρ)[1])
 
-    xa = ax["xaxis"]
-    xa[:set_ticks](ticks)
+    xa = ax.xaxis
+    xa.set_ticks(ticks)
     if length(xlabels) > 0
-        xa[:set_ticklabels](xlabels)
-        ax["xaxis"][:tick_top]()
+        xa.set_ticklabels(xlabels)
+        ax.xaxis.tick_top()
     end
 
-    ya = ax["yaxis"]
-    ya[:set_ticks](ticks)
+    ya = ax.yaxis
+    ya.set_ticks(ticks)
     if length(ylabels) > 0
-        ya[:set_ticklabels](ylabels[end:-1:1])
+        ya.set_ticklabels(ylabels[end:-1:1])
     end
 
     if show_legend
@@ -170,8 +170,8 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
 
         draw_phase_ring(width + 0.1, legend_y, 0.25, ax)
 
-        get(ax["spines"], "left")[:set_position](("axes", 1 / (width + 1) - 0.03))
-        ax[:set_xlim](-0.5, width + 0.5)
+        ax.spines["left"].set_position(("axes", 1 / (width + 1) - 0.03))
+        ax.set_xlim(-0.5, width + 0.5)
     end
 
     fig
@@ -190,7 +190,7 @@ function plot_bloch(ρs)
     qutip = pyimport("qutip")
     b = qutip.Bloch()
     pos(ρ) = [real(expect(f(SpinBasis(1//2)), ρ)) for f in [sigmax, sigmay, sigmaz]]
-    b[:add_vectors]([pos(ρ) for ρ in ρs])
+    b.add_vectors([pos(ρ) for ρ in ρs])
     b
 end
 
