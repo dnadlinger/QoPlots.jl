@@ -27,7 +27,7 @@ function draw_square(ax, x, y, area, color; angle_tick=false, angle=0.0)
     if angle_tick && hs > 0.04
         len = hs * 0.8
         ax.add_line(plt.Line2D([x, x + len * cos(angle)],
-            [y, y + len * sin(angle)], color=brighten(color, 0.91), linewidth=0.8))
+            [y, y + len * sin(angle)], color=brighten(color, 0.85), linewidth=0.8))
     end
 end
 
@@ -106,6 +106,7 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
             if show_numbers && x <= y && abs(z) > 1e-3
                 # Draw value text.
                 if x == y
+                    # On the diagonal, don't display phase term.
                     abstext = @sprintf "\$ %.3f \$" abs(z)
                     text(x, height + 1 - y - 0.01, abstext,
                         horizontalalignment="center",
