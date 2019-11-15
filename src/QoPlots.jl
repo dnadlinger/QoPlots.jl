@@ -65,7 +65,8 @@ function computational_basis_labels(dims)
     [join("$v" for v in t) for t in Base.product((0:(d - 1) for d in dims)...)][:]
 end
 
-function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legend=true, show_numbers=false, hide_zeros=false)
+function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legend=true,
+                 show_numbers=false, hide_zeros=false, scale=nothing)
     height, width = size(ρ)
 
     figsize = [2, 2] * height / 2
@@ -89,8 +90,13 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
 
     #ax.fill([0, width, width, 0], [0, 0, height, height], color="w")
 
-    max_magn = maximum(abs.(ρ))
-    scale = 1 / (2 * max_magn)
+    if scale == nothing
+        max_magn = maximum(abs.(ρ))
+        scale = 1 / (2 * max_magn)
+    else
+        max_magn = 1 / (2 * scale)
+    end
+
     for x in 1:width
         for y in 1:height
             z = ρ[y, x]
