@@ -73,7 +73,7 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
     if show_legend
         figsize += [0.0, 0.5]
     end
-    fig, ax = subplots(1, 1, figsize=figsize)
+    _, ax = subplots(1, 1, figsize=figsize)
 
     if xlabels == nothing
         xlabels = []
@@ -181,7 +181,7 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
         ax.set_xlim(-0.5, width + 0.5)
     end
 
-    fig
+    ax
 end
 
 function plot_dm(ρ::DenseOperator; xlabels=nothing, ylabels=nothing, kwargs...)
