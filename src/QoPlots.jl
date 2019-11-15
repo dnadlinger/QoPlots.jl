@@ -67,10 +67,10 @@ end
 
 function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legend=true,
                  show_numbers=false, hide_zeros=false, scale=nothing, ax=nothing)
-    height, width = size(ρ)
+    num_rows, num_cols = size(ρ)
 
     if ax == nothing
-        figsize = [2, 2] * height / 2
+        figsize = [2, 2] * num_rows / 2
         if show_legend
             figsize += [0.0, 0.5]
         end
@@ -90,7 +90,7 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
     ax.axis("equal")
     ax.set_frame_on(false)
 
-    #ax.fill([0, width, width, 0], [0, 0, height, height], color="w")
+    #ax.fill([0, num_cols, num_cols, 0], [0, 0, num_rows, num_rows], color="w")
 
     if scale == nothing
         max_magn = maximum(abs.(ρ))
@@ -99,14 +99,14 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
         max_magn = 1 / (2 * scale)
     end
 
-    for x in 1:width
-        for y in 1:height
+    for x in 1:num_cols
+        for y in 1:num_rows
             z = ρ[y, x]
 
             if !show_numbers || x >= y
                 # Draw square.
                 if abs(z) > 0.0
-                    draw_square(ax, x, height + 1 - y, abs(z) * scale,
+                    draw_square(ax, x, num_rows + 1 - y, abs(z) * scale,
                         colour(angle(z)), angle=angle(z), angle_tick=(x != y))
                 end
             end
@@ -116,21 +116,21 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
                 if x == y
                     # On the diagonal, don't display phase term.
                     abstext = @sprintf "\$ %.3f \$" abs(z)
-                    text(x, height + 1 - y - 0.01, abstext,
+                    text(x, num_rows + 1 - y - 0.01, abstext,
                         horizontalalignment="center",
                         verticalalignment="center",
                         color=brighten(colour(0.0), 0.65),
                         size=10)
                 else
                     abstext = @sprintf "\$ %.3f \\ \\cdot \$" abs(z)
-                    text(x, height + 1 - y + 0.02, abstext,
+                    text(x, num_rows + 1 - y + 0.02, abstext,
                         horizontalalignment="center",
                         verticalalignment="bottom",
                         color=brighten(colour(0.0), 0.65),
                         size=10)
 
                     phasetext = @sprintf "\$ \\mathrm{e}^{\\mathrm{i} %.3f \\pi} \$" (mod(angle(z), 2π) / pi)
-                    text(x, height + 1 - y - 0.04, phasetext,
+                    text(x, num_rows + 1 - y - 0.04, phasetext,
                         horizontalalignment="center",
                         verticalalignment="top",
                         color=brighten(colour(0.0), 0.65),
@@ -159,7 +159,7 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
         legend_y = -0.1
 
         legend_color = convert(Luv, colour(0)) |> a-> Luv(a.l, 0, 0)
-        if width == 2
+        if num_cols == 2
             areas = [0.5, 0.01]
         else
             areas = [0.5, 0.25, 0.1, 0.01, 0.001][max_magn > 0.29 ? (1:end - 1) : (2:end)]
@@ -177,10 +177,10 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
             x += 0.8size + 0.6
         end
 
-        draw_phase_ring(width + 0.1, legend_y, 0.25, ax)
+        draw_phase_ring(num_cols + 0.1, legend_y, 0.25, ax)
 
-        ax.spines["left"].set_position(("axes", 1 / (width + 1) - 0.03))
-        ax.set_xlim(-0.5, width + 0.5)
+        ax.spines["left"].set_position(("axes", 1 / (num_cols + 1) - 0.03))
+        ax.set_xlim(-0.5, num_cols + 0.5)
     end
 
     ax
