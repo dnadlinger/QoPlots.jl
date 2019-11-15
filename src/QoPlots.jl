@@ -55,10 +55,10 @@ function draw_phase_ring(x, y, radius, ax)
 
     padded = 1.1 * radius
     color = rgb(convert(Luv, colour(0)) |> a-> Luv(a.l, 0, 0))
-    text(x + padded, y, L"$+$", ha="left", va="center", size=6, color=color)
-    text(x - padded, y, L"$-$", ha="right", va="center", size=6, color=color)
-    text(x, y + padded, L"$\mathrm{i}$", ha="center", va="bottom", size=6, color=color)
-    text(x, y - padded, L"$-\mathrm{i}$", ha="center", va="top", size=6, color=color)
+    ax.text(x + padded, y, L"$+$", ha="left", va="center", size=6, color=color)
+    ax.text(x - padded, y, L"$-$", ha="right", va="center", size=6, color=color)
+    ax.text(x, y + padded, L"$\mathrm{i}$", ha="center", va="bottom", size=6, color=color)
+    ax.text(x, y - padded, L"$-\mathrm{i}$", ha="center", va="top", size=6, color=color)
 end
 
 function computational_basis_labels(dims)
