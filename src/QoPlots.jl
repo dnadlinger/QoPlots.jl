@@ -65,7 +65,7 @@ function computational_basis_labels(dims)
     [join("$v" for v in t) for t in Base.product((0:(d - 1) for d in dims)...)][:]
 end
 
-function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legend=true, show_numbers=false)
+function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legend=true, show_numbers=false, hide_zeros=false)
     height, width = size(ρ)
 
     figsize = [2, 2] * height / 2
@@ -103,7 +103,7 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
                 end
             end
 
-            if show_numbers && x <= y && abs(z) > 1e-3
+            if show_numbers && x <= y && (!hide_zeros || abs(z) >= 1e-3)
                 # Draw value text.
                 if x == y
                     # On the diagonal, don't display phase term.
