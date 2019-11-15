@@ -66,14 +66,16 @@ function computational_basis_labels(dims)
 end
 
 function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legend=true,
-                 show_numbers=false, hide_zeros=false, scale=nothing)
+                 show_numbers=false, hide_zeros=false, scale=nothing, ax=nothing)
     height, width = size(ρ)
 
-    figsize = [2, 2] * height / 2
-    if show_legend
-        figsize += [0.0, 0.5]
+    if ax == nothing
+        figsize = [2, 2] * height / 2
+        if show_legend
+            figsize += [0.0, 0.5]
+        end
+        _, ax = subplots(1, 1, figsize=figsize)
     end
-    _, ax = subplots(1, 1, figsize=figsize)
 
     if xlabels == nothing
         xlabels = []
