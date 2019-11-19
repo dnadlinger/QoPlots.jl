@@ -1,6 +1,6 @@
 module QoPlots
 
-export plot_dm, plot_bloch
+export plot_dm, plot_dm_square_size_legend, plot_bloch
 
 include("phase_cmap.jl")
 
@@ -17,7 +17,7 @@ function brighten(color, factor)
     rgb(Luv(luv.l * clamp(factor, 0.0, 1.0), luv.u, luv.v))
 end
 
-function draw_square(ax, x, y, area, color; angle_tick=false, angle=0.0)
+function draw_square(x, y, area, color, ax; angle_tick=false, angle=0.0)
     hs = area^0.5 / 2
     xcorners = [x - hs, x + hs, x + hs, x - hs]
     ycorners = [y - hs, y - hs, y + hs, y + hs]
@@ -65,6 +65,49 @@ function computational_basis_labels(dims)
     [join("$v" for v in t) for t in Base.product((0:(d - 1) for d in dims)...)][:]
 end
 
+
+function plot_dm_square_size_legend(x, y, scale, ax; direction=:horizontal, num_dims=4)
+    legend_color = convert(Luv, colour(0)) |> a-> Luv(a.l, 0, 0)
+
+    if num_dims == 2
+        areas = [0.5, 0.01]
+    else
+        # Decide whether to show the 0.5 or 0.001 square depending on the scale, i.e.
+        # the data values in the corresponding plot.
+        # (The cutoff is just chosen based on what empirically looked good).
+        show_0p5 = scale < 1.72
+        areas = [0.5, 0.25, 0.1, 0.01, 0.001][show_0p5 ? (1:end - 1) : (2:end)]
+    end
+
+    next_square_pos = [x, y]
+    if direction == :horizontal
+        inc_dir = [1, 0]
+    elseif direction == :vertical
+        inc_dir = [0, -1]
+    else
+        error("Unexpected legend direction: '$(direction)'")
+    end
+
+    for (i, area) in enumerate(areas)
+        draw_square(next_square_pos..., scale * area, legend_color, ax)
+        size_ = sqrt(scale * area)
+
+        ax.text((next_square_pos - [0, 0.06 + size_ / 2])..., "\$ $area\$",
+            horizontalalignment="center",
+            verticalalignment="top",
+            color=rgb(legend_color),
+            size=8)
+
+        next_square_pos += (0.8size_ + 0.6) * inc_dir
+    end
+
+    draw_phase_ring((next_square_pos + 0.3 * inc_dir)..., 0.25, ax)
+
+    ax.axis("equal")
+    ax.axis("off")
+    ax.set_frame_on(false)
+end
+
 function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legend=true,
                  show_numbers=false, hide_zeros=false, scale=nothing, ax=nothing)
     num_rows, num_cols = size(ρ)
@@ -95,8 +138,6 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
     if scale == nothing
         max_magn = maximum(abs.(ρ))
         scale = 1 / (2 * max_magn)
-    else
-        max_magn = 1 / (2 * scale)
     end
 
     for x in 1:num_cols
@@ -106,8 +147,8 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
             if !show_numbers || x >= y
                 # Draw square.
                 if abs(z) > 0.0
-                    draw_square(ax, x, num_rows + 1 - y, abs(z) * scale,
-                        colour(angle(z)), angle=angle(z), angle_tick=(x != y))
+                    draw_square(x, num_rows + 1 - y, abs(z) * scale,
+                        colour(angle(z)), ax, angle=angle(z), angle_tick=(x != y),)
                 end
             end
 
@@ -156,31 +197,9 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
     end
 
     if show_legend
-        legend_y = -0.1
-
-        legend_color = convert(Luv, colour(0)) |> a-> Luv(a.l, 0, 0)
-        if num_cols == 2
-            areas = [0.5, 0.01]
-        else
-            areas = [0.5, 0.25, 0.1, 0.01, 0.001][max_magn > 0.29 ? (1:end - 1) : (2:end)]
-        end
-        x = 0.4
-        for (i, area) in enumerate(areas)
-            draw_square(ax, x, legend_y, scale * area, legend_color)
-            size = sqrt(scale * area)
-
-            text(x, legend_y - 0.15 - size / 2, "\$ $area\$",
-                horizontalalignment="center",
-                verticalalignment="center",
-                color=rgb(legend_color),
-                size=8)
-            x += 0.8size + 0.6
-        end
-
-        draw_phase_ring(num_cols + 0.1, legend_y, 0.25, ax)
-
-        ax.spines["left"].set_position(("axes", 1 / (num_cols + 1) - 0.03))
-        ax.set_xlim(-0.5, num_cols + 0.5)
+        plot_dm_square_size_legend(0.4, -0.1, scale, ax, num_dims=num_cols)
+        ax.spines["left"].set_position(("axes", 1 / (num_dims + 1) - 0.03))
+        ax.set_xlim(-0.5, num_dims + 0.5)
     end
 
     ax
