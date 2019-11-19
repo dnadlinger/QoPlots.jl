@@ -109,7 +109,7 @@ function plot_dm_square_size_legend(x, y, scale, ax; direction=:horizontal, num_
 end
 
 function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legend=true,
-                 show_numbers=false, hide_zeros=false, scale=nothing, ax=nothing)
+                 show_numbers=false, hide_zeros=false, scale=nothing, textsize=8, ax=nothing)
     num_rows, num_cols = size(ρ)
 
     if ax == nothing
@@ -126,11 +126,12 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
     if ylabels == nothing
         ylabels = []
     end
+
+    ax.axis("equal")
+
     if length(xlabels) == 0 && length(ylabels) == 0
         ax.axis("off")
     end
-
-    ax.axis("equal")
     ax.set_frame_on(false)
 
     #ax.fill([0, num_cols, num_cols, 0], [0, 0, num_rows, num_rows], color="w")
@@ -157,25 +158,25 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
                 if x == y
                     # On the diagonal, don't display phase term.
                     abstext = @sprintf "\$ %.3f \$" abs(z)
-                    text(x, num_rows + 1 - y - 0.01, abstext,
+                    ax.text(x, num_rows + 1 - y - 0.01, abstext,
                         horizontalalignment="center",
                         verticalalignment="center",
                         color=brighten(colour(0.0), 0.65),
-                        size=10)
+                        size=textsize)
                 else
-                    abstext = @sprintf "\$ %.3f \\ \\cdot \$" abs(z)
-                    text(x, num_rows + 1 - y + 0.02, abstext,
+                    abstext = @sprintf "\$ %.3f \\cdot \$" abs(z)
+                    ax.text(x, num_rows + 1 - y + 0.02, abstext,
                         horizontalalignment="center",
                         verticalalignment="bottom",
                         color=brighten(colour(0.0), 0.65),
-                        size=10)
+                        size=textsize)
 
                     phasetext = @sprintf "\$ \\mathrm{e}^{\\mathrm{i} %.3f \\pi} \$" (mod(angle(z), 2π) / pi)
-                    text(x, num_rows + 1 - y - 0.04, phasetext,
+                    ax.text(x, num_rows + 1 - y - 0.04, phasetext,
                         horizontalalignment="center",
                         verticalalignment="top",
                         color=brighten(colour(0.0), 0.65),
-                        size=10)
+                        size=textsize)
                 end
             end
         end
