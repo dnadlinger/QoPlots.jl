@@ -141,6 +141,8 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
         scale = 1 / (2 * max_magn)
     end
 
+    path_effects = pyimport("matplotlib.patheffects")
+
     for x in 1:num_cols
         for y in 1:num_rows
             z = ρ[y, x]
@@ -163,6 +165,9 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
                         verticalalignment="center",
                         color=brighten(colour(0.0), 0.65),
                         size=textsize)
+                    t.set_path_effects([
+                        path_effects.Stroke(linewidth=textsize/4, foreground="white", alpha=0.3),
+                        path_effects.Normal()])
                 else
                     abstext = @sprintf "\$ %.3f \\cdot \$" abs(z)
                     ax.text(x, num_rows + 1 - y + 0.02, abstext,
