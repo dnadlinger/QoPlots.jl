@@ -160,7 +160,7 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
                 if x == y
                     # On the diagonal, don't display phase term.
                     abstext = @sprintf "\$ %.3f \$" abs(z)
-                    ax.text(x, num_rows + 1 - y - 0.01, abstext,
+                    t = ax.text(x, num_rows + 1 - y - 0.023, abstext,
                         horizontalalignment="center",
                         verticalalignment="center",
                         color=brighten(colour(0.0), 0.65),
