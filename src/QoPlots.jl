@@ -204,8 +204,8 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
 
     if show_legend
         plot_dm_square_size_legend(0.4, -0.1, scale, ax, num_dims=num_cols)
-        ax.spines["left"].set_position(("axes", 1 / (num_dims + 1) - 0.03))
-        ax.set_xlim(-0.5, num_dims + 0.5)
+        ax.spines["left"].set_position(("axes", 1 / (num_cols + 1) - 0.03))
+        ax.set_xlim(-0.5, num_cols + 0.5)
     end
 
     ax
