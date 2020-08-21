@@ -211,7 +211,7 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
     ax
 end
 
-function plot_dm(ρ::DenseOperator; xlabels=nothing, ylabels=nothing, kwargs...)
+function plot_dm(ρ::DenseOpType; xlabels=nothing, ylabels=nothing, kwargs...)
     if xlabels == nothing && ylabels == nothing
         ls = computational_basis_labels(ρ.basis_l.shape)
         xlabels = ["\$\\langle$l|\$" for l in ls]
