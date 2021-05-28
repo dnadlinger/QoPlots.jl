@@ -27,7 +27,7 @@ function draw_square(x, y, area, color, ax; angle_tick=false, angle=0.0)
     if angle_tick && hs > 0.04
         len = hs * 0.8
         ax.add_line(plt.Line2D([x, x + len * cos(angle)],
-            [y, y + len * sin(angle)], color=brighten(color, 0.85), linewidth=0.8))
+            [y, y + len * sin(angle)], color=brighten(color, 0.6), linewidth=0.8))
     end
 end
 
