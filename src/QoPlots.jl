@@ -8,7 +8,7 @@ using Colors
 using Printf
 using PyCall
 using PyPlot
-using QuantumOptics
+using QuantumOpticsBase
 
 rgb(c) = convert(RGB, c) |> a -> (a.r, a.g, a.b)
 
