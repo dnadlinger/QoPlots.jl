@@ -112,7 +112,7 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
                  show_numbers=false, hide_zeros=false, scale=nothing, textsize=8, ax=nothing)
     num_rows, num_cols = size(ρ)
 
-    if ax == nothing
+    if ax === nothing
         figsize = [2, 2] * num_rows / 2
         if show_legend
             figsize += [0.0, 0.5]
@@ -120,10 +120,10 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
         _, ax = subplots(1, 1, figsize=figsize)
     end
 
-    if xlabels == nothing
+    if xlabels === nothing
         xlabels = []
     end
-    if ylabels == nothing
+    if ylabels === nothing
         ylabels = []
     end
 
@@ -136,7 +136,7 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
 
     #ax.fill([0, num_cols, num_cols, 0], [0, 0, num_rows, num_rows], color="w")
 
-    if scale == nothing
+    if scale === nothing
         max_magn = maximum(abs.(ρ))
         scale = 1 / (2 * max_magn)
     end
@@ -204,15 +204,15 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
 
     if show_legend
         plot_dm_square_size_legend(0.4, -0.1, scale, ax, num_dims=num_cols)
-        ax.spines["left"].set_position(("axes", 1 / (num_cols + 1) - 0.03))
-        ax.set_xlim(-0.5, num_cols + 0.5)
+        ax.spines["left"].set_position(("axes", 1 / (num_cols + 1) - 0.05))
+        ax.set_xlim(0, num_cols + 0.5)
     end
 
     ax
 end
 
 function plot_dm(ρ::DenseOpType; xlabels=nothing, ylabels=nothing, kwargs...)
-    if xlabels == nothing && ylabels == nothing
+    if xlabels === nothing && ylabels === nothing
         ls = computational_basis_labels(ρ.basis_l.shape)
         xlabels = ["\$\\langle$l|\$" for l in ls]
         ylabels = ["\$|$l\\rangle\$" for l in ls]
