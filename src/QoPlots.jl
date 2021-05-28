@@ -104,7 +104,7 @@ function plot_dm_square_size_legend(x, y, scale, ax; direction=:horizontal, num_
     draw_phase_ring((next_square_pos + 0.3 * inc_dir)..., 0.25, ax)
 
     ax.axis("equal")
-    ax.axis("off")
+    # ax.axis("off")
     ax.set_frame_on(false)
 end
 
@@ -117,7 +117,7 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
         if show_legend
             figsize += [0.0, 0.5]
         end
-        _, ax = subplots(1, 1, figsize=figsize)
+        _, ax = subplots(1, 1, figsize=figsize, constrained_layout=true)
     end
 
     if xlabels === nothing
