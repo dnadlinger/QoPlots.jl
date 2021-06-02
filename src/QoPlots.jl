@@ -66,7 +66,7 @@ function computational_basis_labels(dims)
 end
 
 
-function plot_dm_square_size_legend(x, y, scale, ax; direction=:horizontal, num_dims=4)
+function plot_dm_square_size_legend(x, y, scale, ax; direction=:horizontal, num_dims=4, textsize=8)
     legend_color = convert(Luv, colour(0)) |> a-> Luv(a.l, 0, 0)
 
     if num_dims == 2
@@ -96,16 +96,14 @@ function plot_dm_square_size_legend(x, y, scale, ax; direction=:horizontal, num_
             horizontalalignment="center",
             verticalalignment="top",
             color=rgb(legend_color),
-            size=8)
+            size=textsize)
 
-        next_square_pos += (0.8size_ + 0.6) * inc_dir
+        next_square_pos += (0.8size_ + 0.55) * inc_dir
     end
 
     draw_phase_ring((next_square_pos + 0.3 * inc_dir)..., 0.25, ax)
 
     ax.axis("equal")
-    # ax.axis("off")
-    ax.set_frame_on(false)
 end
 
 function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legend=true,
@@ -203,9 +201,8 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
     end
 
     if show_legend
-        plot_dm_square_size_legend(0.4, -0.1, scale, ax, num_dims=num_cols)
-        ax.spines["left"].set_position(("axes", 1 / (num_cols + 1) - 0.05))
-        ax.set_xlim(0, num_cols + 0.5)
+        plot_dm_square_size_legend(0.25, -0.05, scale, ax, num_dims=num_cols, textsize=textsize)
+        ax.spines["left"].set_position(("data", 0.4))
     end
 
     ax
