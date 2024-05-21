@@ -170,7 +170,7 @@ function plot_dm(ρ::AbstractArray; xlabels=nothing, ylabels=nothing, show_legen
                         path_effects.Stroke(linewidth=textsize/4, foreground="white", alpha=0.3),
                         path_effects.Normal()])
                 else
-                    abstext = @sprintf "\$ %.3f \\cdot \$" abs(z)
+                    abstext = @sprintf "\$ %.3f\\, \\cdot \$" abs(z)
                     ax.text(x, num_rows + 1 - y + 0.02, abstext,
                         horizontalalignment="center",
                         verticalalignment="bottom",
