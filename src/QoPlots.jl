@@ -22,7 +22,10 @@ function draw_square(x, y, area, color, ax; angle_tick=false, angle=0.0)
     xcorners = [x - hs, x + hs, x + hs, x - hs]
     ycorners = [y - hs, y - hs, y + hs, y + hs]
 
-    ax.fill(xcorners, ycorners, color=rgb(color))
+    square = ax.fill(xcorners, ycorners, color=rgb(color))
+    for a in square
+        a.set_clip_on(false)
+    end
 
     if angle_tick && hs > 0.04
         len = hs * 0.8
