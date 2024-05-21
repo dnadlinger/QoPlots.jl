@@ -41,7 +41,7 @@ function colour(arg)
 end
 #colour(arg) = RGB(cmocean.cm.phase((arg / 2π + 0.63) % 1)[1:3]...)
 
-function draw_phase_ring(x, y, radius, ax)
+function draw_phase_ring(x, y, radius, ax; textsize=6)
     mc = pyimport("matplotlib.collections")
     mp = pyimport("matplotlib.patches")
 
@@ -58,10 +58,10 @@ function draw_phase_ring(x, y, radius, ax)
 
     padded = 1.1 * radius
     color = rgb(convert(Luv, colour(0)) |> a-> Luv(a.l, 0, 0))
-    ax.text(x + padded, y, L"$+$", ha="left", va="center", size=6, color=color)
-    ax.text(x - padded, y, L"$-$", ha="right", va="center", size=6, color=color)
-    ax.text(x, y + padded, L"$\mathrm{i}$", ha="center", va="bottom", size=6, color=color)
-    ax.text(x, y - padded, L"$-\mathrm{i}$", ha="center", va="top", size=6, color=color)
+    ax.text(x + padded, y, L"$+$", ha="left", va="center", size=textsize, color=color)
+    ax.text(x - padded, y, L"$-$", ha="right", va="center", size=textsize, color=color)
+    ax.text(x, y + padded - 0.1 * radius, L"$\mathrm{i}$", ha="center", va="bottom", size=textsize, color=color)
+    ax.text(x, y - padded, L"$-\mathrm{i}$", ha="center", va="top", size=textsize, color=color)
 end
 
 function computational_basis_labels(dims)
@@ -104,7 +104,7 @@ function plot_dm_square_size_legend(x, y, scale, ax; direction=:horizontal, num_
         next_square_pos += (0.8size_ + 0.55) * inc_dir
     end
 
-    draw_phase_ring((next_square_pos + 0.3 * inc_dir)..., 0.25, ax)
+    draw_phase_ring((next_square_pos + 0.3 * inc_dir)..., 0.25, ax, textsize=textsize)
 
     ax.axis("equal")
 end
